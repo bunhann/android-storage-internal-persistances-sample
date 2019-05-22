@@ -3,21 +3,18 @@ package com.bunhann.androidstoragepersistance;
 import android.content.Context;
 import android.content.ContextWrapper;
 import android.os.AsyncTask;
-import android.os.Environment;
 import android.os.Handler;
 import android.util.Log;
 import android.widget.Button;
-import android.widget.Toast;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
 import java.net.URL;
 
-/**
- * Created by SONU on 29/10/15.
- */
+
 public class DownloadTask {
 
     private static final String TAG = "Download Task";
@@ -30,7 +27,12 @@ public class DownloadTask {
         this.buttonText = buttonText;
         this.downloadUrl = downloadUrl;
 
-        downloadFileName = downloadUrl;//Create file name by picking download file name from URL
+        try {
+            downloadFileName = new File(new URL(downloadUrl).getPath()).getName();//Create file name by picking download file name from URL
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+
+        }
         Log.e(TAG, downloadFileName);
 
         //Start Downloading Task
@@ -103,16 +105,6 @@ public class DownloadTask {
 
                 }
 
-
-//                //Get File if SD card is present
-//                if (new CheckForSDCard().isSDCardPresent()) {
-//
-//                    internalStorage = new File(
-//                            Environment.getExternalStorageDirectory() + "/"
-//                                    + Utils.downloadDirectory);
-//                } else
-//                    Toast.makeText(context, "Oops!! There is no SD Card.", Toast.LENGTH_SHORT).show();
-                //internalStorage = new File(Environment.getDataDirectory() + "private_videos");
                 ContextWrapper cw = new ContextWrapper(context.getApplicationContext());
                 internalStorage = cw.getDir("private_video", Context.MODE_PRIVATE);
 
